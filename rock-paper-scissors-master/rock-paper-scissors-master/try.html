@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>header</title>
+  <style>
+    header{
+      background: linear-gradient(rgb(20, 20, 54), rgb(184, 32, 184),rgb(128, 34, 34) );
+    }
+  </style>
+</head>
+<body>
+  <header style="display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;">
+    <button>Home</button>
+    <button>Updates</button>
+    <button>Crane</button>
+    <button>TMNT</button>
+  </header>
+  
+  <script>
+    function createPolybiusSquare() {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  const square = [];
+  const usedLetters = {};
+
+  for (let i = 0; i < 5; i++) {
+    const row = [];
+    for (let j = 0; j < 5; j++) {
+      const letter = alphabet[i * 5 + j];
+      if (!usedLetters[letter]) {
+        usedLetters[letter] = true;
+        row.push(letter);
+      }
+    }
+    square.push(row);
+  }
+
+  return square;
+}
+
+function encrypt(text, square) {
+  const encryptedText = [];
+  const adjustedText = adjustLength(text, 5);
+
+  for (let i = 0; i < adjustedText.length; i += 5) {
+    const row = adjustedText.slice(i, i + 5);
+    const encryptedRow = [];
+
+    for (let j = 0; j < row.length; j++) {
+      const letter = row[j];
+      const coordinates = findLetterCoordinates(square, letter);
+      encryptedRow.push(coordinates.row);
+      encryptedRow.push(coordinates.column);
+    }
+
+    encryptedText.push(encryptedRow.join(''));
+  }
+
+  return encryptedText.join('');
+}
+
+function decrypt(text, square) {
+  const decryptedText = [];
+
+  for (let i = 0; i < text.length; i += 2) {
+    const row = text.slice(i, i + 2);
+    const column = text.slice(i + 2, i + 4);
+    const letter = square[row - 1][column - 1];
+    decryptedText.push(letter);
+  }
+
+  return decryptedText.join('');
+}
+
+function adjustLength(text, length) {
+  const adjustedText = text.slice(0, length);
+  while (adjustedText.length < length) {
+    adjustedText += 'd';
+ }
+
+  return adjustedText;
+}
+
+function findLetterCoordinates(square, letter) {
+  for (let i = 0; i < square.length; i++) {
+    for (let j = 0; j < square[i].length; j++) {
+      if (square[i][j] === letter) {
+        return { row: i + 1, column: j + 1 };
+      }
+    }
+  }
+}
+
+function main() {
+  const square = createPolybiusSquare();
+  const text = 'The quick brown fox jumps over the lazy dog';
+  const encryptedText = encrypt(text, square);
+  const decryptedText = decrypt(encryptedText, square);
+
+  console.log('Original text:', text);
+  console.log('Encrypted text:', encryptedText);
+  console.log('Decrypted text:', decryptedText);
+}
+  </script>
+</body>
+</html>
